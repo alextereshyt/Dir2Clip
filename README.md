@@ -1,94 +1,65 @@
-# 📋 Dir2Clip
+# Dir2Clip
 
-**Dir2Clip** is a Python CLI tool designed to streamline the process of sharing code context with Large Language Models (LLMs) like ChatGPT, Claude, and Gemini. 
+A command-line tool that recursively scans a directory, formats text files into a single string, and copies them to the clipboard. Useful for quickly pasting code context into LLMs.
 
-It recursively scans a directory, intelligently filters files, formats their contents into a single structured string, and copies the result directly to your clipboard—ready to paste.
+## Features
 
-## ✨ Features
+- **Smart Scanning**: By default, scans only the current directory. Use `-r` for recursive scanning.
+- **Filters** binary files and common ignores (e.g., `.git`, `venv`, `__pycache__`).
+- **Formats** output with Markdown headers (`### FILE: path/to/file`) and code blocks.
+- **Truncates** output (default: 100k chars) to prevent exceeding clipboard or context limits.
+- **Cross-platform** clipboard support (Linux/macOS/Windows).
 
-- **🚀 Instant Clipboard Copy**: No manual selecting or copying. One command and you're ready to paste.
-- **🌲 Recursive Scanning**: Traverses your project structure to capture all relevant files.
-- **🚫 Smart Filtering**:
-  - Automatically ignores binary files (images, compiled code, etc.).
-  - Skips standard noise like `.git`, `venv`, `node_modules`, `__pycache__`.
-- **📏 Context Limit Protection**: 
-  - Prevents clipboard overflow for browser-based LLMs.
-  - Defaults to 100,000 characters (configurable).
-  - Adds a clear warning footer if content is truncated.
-- **📝 LLM-Friendly Formatting**: 
-  - Wraps file contents in Markdown code blocks.
-  - Clearly labels each file with `### FILE: path/to/file.ext` for optimal model understanding.
+## Installation
 
-## 🛠️ Installation
-
-You can install **Dir2Clip** directly from PyPI:
+Install via pip:
 
 ```bash
 pip install dir2clip
 ```
 
-**Linux Users:** You may need a system clipboard utility if one isn't already installed:
-```bash
-sudo apt-get install xclip  # or xsel
-```
+*Note: Linux users may need `xclip` or `xsel` installed (`sudo apt install xclip`).*
 
-### Installing from Source (For Developers)
+## Usage
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/Dir2Clip.git
-   cd Dir2Clip
-   ```
-
-2. **Install the package in editable mode**:
-   ```bash
-   pip install -e .
-   ```
-
-## 📖 Usage
-
-Once installed, you can run `dir2clip` from anywhere in your terminal:
+Run `dir2clip` in your terminal:
 
 ```bash
-# Scan and copy current directory
+# Scan current directory (files only)
 dir2clip
 
-# Scan and copy a specific directory
-dir2clip /path/to/project
+# Scan with recursion (include subdirectories)
+dir2clip -r
 
-# Set a custom character limit
+# Scan specific path recursively
+dir2clip ./src -r
+
+# Set character limit (default: 100000)
 dir2clip --max-len 50000
-
-# View all options
-dir2clip --help
 ```
 
-### Output Example
+### Output Format
 
-When you paste into your LLM, it will look like this:
+The tool copies content in this format:
 
 ```text
 ### FILE: src/main.py
 ```
 import os
-print("Hello World")
+...
 ```
 
 ### FILE: README.md
 ```
-# My Project
+# Documentation
 ...
 ```
 ```
 
-## ⚙️ Configuration
+## Configuration
 
-You can customize the `IGNORE_DIRS` list inside `dir2clip/core.py` to exclude additional folders:
+To exclude additional directories, you can modify the `IGNORE_DIRS` set in the source code or file an issue to make it configurable via args.
 
-```python
-IGNORE_DIRS = {'.git', 'venv', 'node_modules', 'dist', 'build', ...}
-```
-
-## 📄 License
+## License
 
 MIT

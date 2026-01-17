@@ -37,8 +37,9 @@ def get_file_content(file_path, root_dir):
         return f"\n\n### FILE: {rel_path} (Skipped: {e})"
 
 def main():
-    parser = argparse.ArgumentParser(description="Recursively parse directory, flatten text files, and copy to clipboard.")
+    parser = argparse.ArgumentParser(description="Parse directory, flatten text files, and copy to clipboard.")
     parser.add_argument("directory", nargs="?", default=".", help="Root directory to parse (default: current directory)")
+    parser.add_argument("-r", "--recursive", action="store_true", help="Enable recursive scanning (default: off)")
     parser.add_argument("--max-len", type=int, default=100000, help="Maximum text length before truncation (default: 100000)")
     
     args = parser.parse_args()
@@ -52,14 +53,25 @@ def main():
     file_count = 0
     truncated = False
     
-    print(f"Scanning '{root_dir}'...")
+    scan_type = "Recursive scan" if args.recursive else "Flat scan"
+    print(f"{scan_type} of '{root_dir}'...")
+
+    # Collect all files first to sort them (ensure deterministic output)
     files_to_process = []
-    for dirpath, dirnames, filenames in os.walk(root_dir):
-        # Modify dirnames in-place to skip ignored directories
-        dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS]
-        
-        for f in filenames:
-            files_to_process.append(os.path.join(dirpath, f))
+    
+    if args.recursive:
+        for dirpath, dirnames, filenames in os.walk(root_dir):
+            # Modify dirnames in-place to skip ignored directories
+            dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS]
+            
+            for f in filenames:
+                files_to_process.append(os.path.join(dirpath, f))
+    else:
+        # Non-recursive: just list files in root_dir
+        for item in os.listdir(root_dir):
+            full_path = os.path.join(root_dir, item)
+            if os.path.isfile(full_path):
+                files_to_process.append(full_path)
             
     files_to_process.sort()
 

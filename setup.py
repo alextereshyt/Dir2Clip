@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dir2clip",
-    version="0.1.1",
+    version="0.1.3",
     description="A CLI tool to flatten directory contents to clipboard for LLM context.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
