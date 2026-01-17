@@ -38,28 +38,3 @@ dir2clip ./src -r
 dir2clip --max-len 50000
 ```
 
-### Output Format
-
-The tool copies content in this format:
-
-```text
-### FILE: src/main.py
-```
-import os
-...
-```
-
-### FILE: README.md
-```
-# Documentation
-...
-```
-```
-
-## Configuration
-
-To exclude additional directories, you can modify the `IGNORE_DIRS` set in the source code or file an issue to make it configurable via args.
-
-## License
-
-MIT
